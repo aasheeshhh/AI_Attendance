@@ -19,25 +19,18 @@ def apply_home_style():
         /* Background */
         .stApp,
         [data-testid="stAppViewContainer"] {
-            color: #F5F1E8 !important;
+            color: #F5F2EA !important;
             background:
-                radial-gradient(ellipse 55% 50% at 12% 5%, rgba(149, 138, 106, 0.18), transparent 70%),
-                radial-gradient(ellipse 45% 55% at 93% 92%, rgba(102, 94, 70, 0.20), transparent 72%),
-                linear-gradient(135deg, #151512 0%, #1C1B17 52%, #171713 100%) !important;
-            background-size: 115% 115%, 120% 120%, 100% 100% !important;
+                radial-gradient(ellipse 48% 42% at 10% 0%, rgba(149, 138, 106, 0.11), transparent 72%),
+                radial-gradient(ellipse 42% 38% at 53% 45%, rgba(37, 35, 30, 0.45), transparent 74%),
+                linear-gradient(145deg, #11110F 0%, #171713 55%, #11110F 100%) !important;
             background-attachment: fixed !important;
-            animation: move-background 18s ease-in-out infinite alternate;
         }
 
         [data-testid="stAppViewContainer"] > .main,
         [data-testid="stMain"],
         .main .block-container {
             background: transparent !important;
-        }
-
-        @keyframes move-background {
-            from { background-position: 0% 0%, 100% 100%, 0 0; }
-            to { background-position: 8% 4%, 92% 95%, 0 0; }
         }
 
         /* Layout */
@@ -57,6 +50,7 @@ def apply_home_style():
             display: flex;
             align-items: center;
             gap: 0.8rem;
+            animation: show-header 420ms ease-out both;
         }
 
         .brand-logo-frame {
@@ -77,21 +71,32 @@ def apply_home_style():
         }
 
         .brand-name {
-            color: #F5F1E8;
+            color: #F5F2EA;
             font-size: 1.15rem;
             font-weight: 600;
             letter-spacing: -0.035em;
+        }
+
+        @keyframes show-header {
+            from { opacity: 0; transform: translateY(-6px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         /* Hero */
         .home-hero {
             margin: clamp(3rem, 9vh, 7rem) 0 2.75rem;
             text-align: center;
+            animation: show-hero 520ms 100ms ease-out both;
+        }
+
+        @keyframes show-hero {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .home-eyebrow {
             margin: 0 0 0.9rem;
-            color: rgba(245, 241, 232, 0.58);
+            color: #A9A59B;
             font-size: 0.72rem;
             font-weight: 600;
             letter-spacing: 0.13em;
@@ -100,7 +105,7 @@ def apply_home_style():
 
         .home-title {
             margin: 0;
-            color: #F5F1E8;
+            color: #F5F2EA;
             font-size: clamp(2rem, 4.2vw, 3.25rem);
             font-weight: 600;
             letter-spacing: -0.055em;
@@ -109,7 +114,7 @@ def apply_home_style():
 
         .home-subtitle {
             margin: 1rem 0 0;
-            color: rgba(245, 241, 232, 0.58);
+            color: #A9A59B;
             font-size: 1.02rem;
             line-height: 1.5;
         }
@@ -118,12 +123,12 @@ def apply_home_style():
         [data-testid="stVerticalBlockBorderWrapper"]:has(.portal-container-anchor) {
             position: relative;
             overflow: hidden;
-            border: 1px solid rgba(245, 241, 232, 0.16) !important;
-            border-radius: 30px !important;
-            background: rgba(245, 241, 232, 0.08) !important;
-            box-shadow: 0 20px 55px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.10) !important;
-            backdrop-filter: blur(26px) saturate(120%);
-            -webkit-backdrop-filter: blur(26px) saturate(120%);
+            border: 1px solid rgba(255, 255, 255, 0.10) !important;
+            border-radius: 24px !important;
+            background: rgba(255, 255, 255, 0.045) !important;
+            box-shadow: 0 18px 45px rgba(0, 0, 0, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+            backdrop-filter: blur(24px) saturate(115%);
+            -webkit-backdrop-filter: blur(24px) saturate(115%);
             animation: show-card 800ms 140ms ease-out both;
         }
 
@@ -156,7 +161,7 @@ def apply_home_style():
 
         .portal-label {
             margin: 0 0 0.35rem;
-            color: #F5F1E8;
+            color: #F5F2EA;
             font-size: 1.35rem;
             font-weight: 600;
             letter-spacing: -0.04em;
@@ -164,7 +169,7 @@ def apply_home_style():
 
         .portal-description {
             margin: 0;
-            color: rgba(245, 241, 232, 0.58);
+            color: #A9A59B;
             font-size: 0.9rem;
             line-height: 1.45;
         }
@@ -182,7 +187,7 @@ def apply_home_style():
 
         [data-testid="stVerticalBlockBorderWrapper"]:has(.portal-container-anchor) [data-testid="column"]:hover {
             transform: translateY(-3px);
-            background: rgba(245, 241, 232, 0.045);
+            background: rgba(255, 255, 255, 0.035);
             box-shadow: 0 14px 28px rgba(0, 0, 0, 0.14);
         }
 
@@ -191,8 +196,8 @@ def apply_home_style():
             min-height: 58px !important;
             border: 1px solid rgba(245, 241, 232, 0.16) !important;
             border-radius: 15px !important;
-            color: #F5F1E8 !important;
-            background: rgba(245, 241, 232, 0.08) !important;
+            color: #F5F2EA !important;
+            background: rgba(17, 17, 15, 0.46) !important;
             box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07) !important;
             font-size: 0.93rem !important;
             font-weight: 550 !important;
@@ -218,7 +223,7 @@ def apply_home_style():
         /* Footer and mobile */
         .home-footer {
             margin: 2rem 0 0;
-            color: rgba(245, 241, 232, 0.42);
+            color: #77736A;
             font-size: 0.75rem;
             letter-spacing: 0.08em;
             text-align: center;
