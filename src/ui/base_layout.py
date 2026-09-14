@@ -1,7 +1,7 @@
 import streamlit as st
 
 
-def apply_home_style():
+def home_style():
     """Apply the warm glass design used by the home screen."""
     st.markdown(
         """

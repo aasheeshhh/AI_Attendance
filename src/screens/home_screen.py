@@ -1,7 +1,7 @@
 import streamlit as st
 
 from src.components.header import show_header
-from src.ui.base_layout import apply_home_style
+from src.ui.base_layout import home_style
 
 
 def show_portal(title: str, description: str, button_text: str, user_type: str):
@@ -22,7 +22,7 @@ def show_portal(title: str, description: str, button_text: str, user_type: str):
 
 
 def show_home():
-    apply_home_style()
+    home_style()
     show_header()
 
     st.markdown(
