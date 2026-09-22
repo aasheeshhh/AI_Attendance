@@ -1,5 +1,5 @@
 import streamlit as st
 
 
-def show_student():
+def Student_screen():
     st.header("Student Screen")
