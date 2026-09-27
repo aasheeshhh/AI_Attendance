@@ -63,8 +63,10 @@ def header_home():
         unsafe_allow_html=True
     )
 
+    # Slightly larger left spacer so icon+text optical center (not the
+    # stretched title column) lines up with the centered portal cards.
     left, logo_col, title_col, right = st.columns(
-        [2.5, 0.9, 4.8, 2.5]
+        [3.0, 0.9, 4.8, 2.0]
     )
 
     with logo_col:

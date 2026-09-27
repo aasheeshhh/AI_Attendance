@@ -1,5 +1,6 @@
 import streamlit as st
 from src.components.header import header_home
+from src.components.footer import footer_home
 from src.ui.base_layout import style_base_layout, style_background_home
 from src.ui.portal_cards import style_portal_cards
 from pathlib import Path
@@ -50,3 +51,5 @@ def home_screen():
                     if st.button("Student Portal", type="primary", use_container_width=True):
                         st.session_state["login_type"] = "student"
                         st.rerun()
+
+    footer_home()

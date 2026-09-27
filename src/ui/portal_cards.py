@@ -9,12 +9,20 @@ def style_portal_cards():
 
         /* ---------- Portal Section ---------- */
 
+        /* Default Streamlit content width (~736px) is narrower than the 900px
+           portal group, which prevents margin:auto centering. */
+        .block-container {
+            max-width: 960px !important;
+        }
+
         .st-key-portal_section {
             width: 900px !important;
             max-width: 900px !important;
 
             margin-left: auto !important;
             margin-right: auto !important;
+
+            align-self: center !important;
 
             margin-top: -1rem !important;
         }
@@ -121,12 +129,6 @@ def style_portal_cards():
             padding: 0 !important;
         }
 
-        .st-key-teacher_image [data-testid="stImage"] img {
-
-            position: relative !important;
-
-            left: 14px !important;
-        }
 
         /* ---------- Streamlit Image Wrapper ---------- */
 
@@ -165,6 +167,19 @@ def style_portal_cards():
             max-width: 100% !important;
 
             object-fit: contain !important;
+        }
+
+
+        /* Optical centering: PNG subjects are not centered in their canvases */
+
+        .st-key-teacher_image [data-testid="stImage"] img {
+            position: relative !important;
+            left: 7px !important;
+        }
+
+        .st-key-student_image [data-testid="stImage"] img {
+            position: relative !important;
+            left: 18px !important;
         }
 
 
