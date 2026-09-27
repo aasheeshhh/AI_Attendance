@@ -46,7 +46,7 @@ def header_home():
             padding: 0 !important;
         }
 
-        [data-testid="stImage"] img {
+        .st-key-home_logo [data-testid="stImage"] img {
             width: 50px !important;
             height: 50px !important;
             object-fit: contain !important;
@@ -69,9 +69,10 @@ def header_home():
 
     with logo_col:
 
-        st.image(
-            str(logo_path)
-        )
+        with st.container(key="home_logo"):
+            st.image(
+                str(logo_path)
+            )
 
     with title_col:
 

@@ -121,6 +121,12 @@ def style_portal_cards():
             padding: 0 !important;
         }
 
+        .st-key-teacher_image [data-testid="stImage"] img {
+
+            position: relative !important;
+
+            left: 14px !important;
+        }
 
         /* ---------- Streamlit Image Wrapper ---------- */
 
