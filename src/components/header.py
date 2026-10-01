@@ -1,84 +1,27 @@
 import streamlit as st
-from pathlib import Path
 
 
 def header_home():
 
-    logo_path = (
-        Path(__file__).resolve().parent.parent.parent
-        / "assets"
-        / "logo.png"
-    )
+    logo_url = "https://i.ibb.co/YTYGn5qV/logo.png"
+    
+    st.markdown(f"""
+        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; margin-bottom:30px; margin-top:30px">
+            <img src='{logo_url}' style='height:100px;' />
+            <h1 style='text-align:center; color:#E0E3FF'>SNAP<br/>CLASS</h1>
+        </div>   
+                
+                """, unsafe_allow_html=True)
 
-    st.markdown(
-        """
-        <style>
 
-        .home-header-space {
-            margin-top: 35px;
-            margin-bottom: 45px;
-        }
+def header_dashboard():
 
-        .home-title {
-            font-family:
-                -apple-system,
-                BlinkMacSystemFont,
-                "SF Pro Display",
-                "SF Pro Text",
-                "Helvetica Neue",
-                Arial,
-                sans-serif !important;
-
-            color: #1D1D1F !important;
-
-            font-size: 3.2rem !important;
-
-            font-weight: 700 !important;
-
-            letter-spacing: -0.035em !important;
-
-            line-height: 1 !important;
-
-            white-space: nowrap !important;
-
-            margin: 0 !important;
-
-            padding: 0 !important;
-        }
-
-        .st-key-home_logo [data-testid="stImage"] img {
-            width: 50px !important;
-            height: 50px !important;
-            object-fit: contain !important;
-            mix-blend-mode: multiply !important;
-        }
-
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
-
-    st.markdown(
-        '<div class="home-header-space"></div>',
-        unsafe_allow_html=True
-    )
-
-    # Slightly larger left spacer so icon+text optical center (not the
-    # stretched title column) lines up with the centered portal cards.
-    left, logo_col, title_col, right = st.columns(
-        [3.0, 0.9, 4.8, 2.0]
-    )
-
-    with logo_col:
-
-        with st.container(key="home_logo"):
-            st.image(
-                str(logo_path)
-            )
-
-    with title_col:
-
-        st.markdown(
-            '<div class="home-title">AI Attendance</div>',
-            unsafe_allow_html=True
-        )
+    logo_url = "https://i.ibb.co/YTYGn5qV/logo.png"
+    
+    st.markdown(f"""
+        <div style="display:flex; align-items:center; justify-content:center; gap:10px">
+            <img src='{logo_url}' style='height:85px;' />
+            <h2 style='text-align:left; color:#5865F2'>SNAP<br/>CLASS</h1>
+        </div>   
+                
+                """, unsafe_allow_html=True)

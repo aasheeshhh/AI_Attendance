@@ -42,9 +42,9 @@ dist/
 .coverage
 htmlcov/
 
-# Jupyter Notebook
+# Streamlit
 
-.ipynb_checkpoints/
+.streamlit/
 
 # Local databases
 
