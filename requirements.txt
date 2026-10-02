@@ -3,16 +3,16 @@ numpy
 pandas
 
 # Face Recognition
-scikit-learn 
-dlib-bin 
+scikit-learn
+dlib-bin
 git+https://github.com/ageitgey/face_recognition_models
 setuptools<70.0.0
 
-supabase # database 
+supabase # database
 bcrypt # hashing methods
 segno # QR generator
 pillow # Image Preprocessing
 streamlit # Frontend
 
-librosa 
+librosa
 resemblyzer
