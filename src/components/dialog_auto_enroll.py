@@ -1,6 +1,6 @@
 import streamlit as st
 from src.database.db import enroll_student_to_subject
-from src.database.config import supabase
+from src.database.config import require_supabase
 
 import time
 
@@ -10,6 +10,7 @@ def auto_enroll_dialog(subject_code):
     student_id = st.session_state.student_data['student_id']
 
 
+    supabase = require_supabase()
     res = supabase.table('subjects').select('subject_id, name').eq('subject_code', subject_code).execute()
     if not res.data:
         st.error('Subject Code not found!')

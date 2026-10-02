@@ -1,4 +1,5 @@
 import os
+from typing import Any
 
 try:
     import streamlit as st
@@ -6,25 +7,25 @@ except ImportError:  # pragma: no cover - Streamlit is required at runtime.
     st = None
 
 try:
-    from supabase import create_client, Client
+    from supabase import create_client
 except ImportError:  # pragma: no cover - optional runtime dependency
     create_client = None
-    Client = None
 
 
 def _get_secrets_value(key):
+    value = None
     if st is not None and hasattr(st, "secrets"):
         try:
-            return st.secrets.get(key)
+            value = st.secrets.get(key)
         except Exception:
-            return None
-    return os.getenv(key)
+            pass
+    return value or os.getenv(key)
 
 
 SUPABASE_URL = _get_secrets_value("SUPABASE_URL")
 SUPABASE_KEY = _get_secrets_value("SUPABASE_KEY")
 
-supabase: Client | None = None
+supabase: Any = None
 if SUPABASE_URL and SUPABASE_KEY and create_client is not None:
     supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 

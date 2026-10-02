@@ -72,7 +72,9 @@ def identify_speaker(new_embedding, candidates_dict, threshold=0.65):
 
 def process_bulk_audio(audio_bytes, candidates_dict, threshold=0.65):
     if audio_bytes is None or librosa is None or VoiceEncoder is None or preprocess_wav is None:
-        return {}
+        if st is not None:
+            st.error('Voice recognition dependencies are not available.')
+        return None
 
     try:
         encoder = load_voice_encoder()
@@ -98,4 +100,4 @@ def process_bulk_audio(audio_bytes, candidates_dict, threshold=0.65):
     except Exception:
         if st is not None:
             st.error('Bulk process error')
-        return {}
+        return None

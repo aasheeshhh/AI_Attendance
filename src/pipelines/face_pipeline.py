@@ -59,11 +59,15 @@ def _normalize_embedding(embedding):
     if embedding is None:
         return None
 
-    embedding_array = np.asarray(embedding, dtype=float)
-    if embedding_array.size == 0:
+    try:
+        embedding_array = np.asarray(embedding, dtype=float).reshape(-1)
+    except (TypeError, ValueError):
         return None
 
-    return embedding_array.reshape(-1)
+    if embedding_array.size != 128 or not np.isfinite(embedding_array).all():
+        return None
+
+    return embedding_array
 
 
 def get_face_embeddings(image_np):
@@ -186,7 +190,16 @@ def predict_attendance(class_image_np):
             if predicted_id is None:
                 continue
         else:
-            best_match_score = float(np.linalg.norm(np.asarray(X_train[y_train.index(predicted_id)]) - encoding))
+            matching_embeddings = [
+                sample for sample, student_id in zip(X_train, y_train)
+                if student_id == predicted_id
+            ]
+            if not matching_embeddings:
+                continue
+            best_match_score = min(
+                float(np.linalg.norm(np.asarray(sample) - encoding))
+                for sample in matching_embeddings
+            )
 
         try:
             student_key = int(predicted_id)

@@ -2,7 +2,7 @@ import streamlit as st
 
 from src.pipelines.voice_pipeline import process_bulk_audio
 
-from src.database.config import supabase
+from src.database.config import require_supabase
 
 import pandas as pd
 
@@ -20,7 +20,11 @@ def voice_attendance_dialog(selected_subject_id):
 
     if st.button('Analyze Audio', width='stretch', type='primary'):
         with st.spinner('Prcessing Audio data'):
-            enrolled_res = supabase.table('subject_students').select("*, students(*)").eq('subject_id',selected_subject_id ).execute()
+            if audio_data is None:
+                st.warning('Please record classroom audio before analyzing it.')
+                return
+
+            enrolled_res = require_supabase().table('subject_students').select("*, students(*)").eq('subject_id',selected_subject_id ).execute()
             enrolled_students = enrolled_res.data
 
             if not enrolled_students:
@@ -35,9 +39,11 @@ def voice_attendance_dialog(selected_subject_id):
                 st.error('No enrolled students have voice profiles registerd')
                 return
             
-            audio_bytes = audio_data.read()
+            audio_bytes = audio_data.getvalue()
 
             detected_scores = process_bulk_audio(audio_bytes, candidates_dict)
+            if detected_scores is None:
+                return
 
             results, attendance_to_log  = [], []
 
