@@ -13,3 +13,6 @@ bcrypt # hashing methods
 segno # QR generator
 pillow # Image Preprocessing
 streamlit # Frontend
+
+librosa 
+resemblyzer
