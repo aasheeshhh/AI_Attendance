@@ -1,9 +1,4 @@
 import streamlit as st
-from src.database.db import enroll_student_to_subject
-from src.database.config import supabase
-import time
-
-
 from src.database.db import create_attendance
 
 def show_attendance_result(df, logs):
@@ -16,6 +11,9 @@ def show_attendance_result(df, logs):
         if st.button('Discard', width='stretch'):
             st.session_state.voice_attendance_results = None
             st.session_state.attendance_images = []
+            st.session_state.pop('attendance_image_hashes', None)
+            st.session_state.pop('dialog_cam', None)
+            st.session_state.pop('dialog_upload', None)
             st.rerun()
 
     with col2:
@@ -24,6 +22,9 @@ def show_attendance_result(df, logs):
                 create_attendance(logs)
                 st.toast("Attendance taken")
                 st.session_state.attendance_images = []
+                st.session_state.pop('attendance_image_hashes', None)
+                st.session_state.pop('dialog_cam', None)
+                st.session_state.pop('dialog_upload', None)
                 st.session_state.voice_attendance_results = None
                 st.rerun()
             except Exception as e:
@@ -34,4 +35,3 @@ def show_attendance_result(df, logs):
 @st.dialog("Attendance Reports")
 def attendance_result_dialog(df, logs):
     show_attendance_result(df, logs)
-

@@ -1,6 +1,6 @@
 import streamlit as st
 from src.database.db import enroll_student_to_subject
-from src.database.config import supabase
+from src.database.config import require_supabase
 
 import time
 
@@ -12,6 +12,7 @@ def enroll_dialog():
 
     if st.button('Enroll now', type='primary', width='stretch'):
         if join_code:
+            supabase = require_supabase()
             res = supabase.table('subjects').select('subject_id, name, subject_code').eq('subject_code', join_code).execute()
             if res.data:
                 subject = res.data[0]
