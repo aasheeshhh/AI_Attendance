@@ -20,8 +20,7 @@ from src.ui.reference_components import (
 from src.database.db import (
     get_all_students,
     get_teacher_subjects,
-    get_all_attendance_logs,
-    update_attendance_status,
+    get_attendance_for_teacher,
 )
 from src.components.dialog_add_photo import add_photos_dialog
 from src.components.dialog_voice_attendance import voice_attendance_dialog
@@ -60,7 +59,7 @@ def reference_attendance_page(teacher_data):
     # Load data
     students = get_all_students() or []
     subjects = get_teacher_subjects(teacher_data['teacher_id']) or []
-    logs = get_all_attendance_logs() or []
+    logs = get_attendance_for_teacher(teacher_data['teacher_id']) or []
 
     # Filters row (Date picker + Class dropdown + Search)
     filter_col1, filter_col2, filter_col3 = st.columns([1, 2, 2])

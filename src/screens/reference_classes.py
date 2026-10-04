@@ -17,7 +17,7 @@ from src.ui.reference_components import (
 from src.database.db import (
     get_teacher_subjects,
     get_all_students,
-    get_all_attendance_logs,
+    get_attendance_for_teacher,
 )
 from src.components.dialog_create_subject import create_subject_dialog
 from src.components.dialog_share_subject import share_subject_dialog
@@ -56,7 +56,7 @@ def reference_classes_page(teacher_data):
     # Load data
     subjects = get_teacher_subjects(teacher_data['teacher_id']) or []
     students = get_all_students() or []
-    logs = get_all_attendance_logs() or []
+    logs = get_attendance_for_teacher(teacher_data['teacher_id']) or []
 
     # Add Class button
     if st.button("+ Create Class", type='primary', use_container_width=False):
