@@ -1,62 +1,60 @@
 """
-macOS Design System for AI Attendance Application
-Enhanced with visual language from pixel-perfect-snap-8916 reference design
+Reference-Inspired Design System for AI Attendance
+Based on pixel-perfect-snap-8916 visual language
+
+This is an ENHANCED version of the existing macOS design system,
+incorporating the refined visual language from the reference project.
 """
 
 import streamlit as st
 
 # ============================================================
-# ENHANCED COLOR PALETTE (Reference Project OKLCH-inspired)
+# ENHANCED COLOR PALETTE (OKLCH-inspired values in hex)
 # ============================================================
 
 COLORS = {
-    # Backgrounds - Reference gradient style
+    # Backgrounds - Gradient-capable
     'background': '#F5F5F7',  # oklch(0.97 0.002 286)
-    'background_gradient_start': '#F0EFF5',
-    'background_gradient_end': '#F5F7FA',
+    'background_gradient_start': '#F0EFF5',  # Subtle purple tint
+    'background_gradient_end': '#F5F7FA',  # Subtle blue tint
 
-    # Surfaces
+    # Surfaces with sophisticated shadows
     'surface_primary': '#FFFFFF',
     'surface_secondary': '#F2F2F7',
     'surface_tertiary': '#E5E5EA',
-    'surface_glass': 'rgba(255, 255, 255, 0.72)',
+    'surface_glass': 'rgba(255, 255, 255, 0.7)',  # Frosted glass
 
-    # Text
-    'text_primary': '#1D1D1F',  # oklch(0.22 0.004 286)
-    'text_secondary': '#6E6E73',  # oklch(0.53 0.008 286)
+    # Text hierarchy
+    'text_primary': '#1D1D1F',
+    'text_secondary': '#6E6E73',
     'text_tertiary': '#86868B',
 
-    # Apple Blue (Primary Action)
-    'blue': '#007AFF',  # oklch(0.6 0.2 256)
+    # Apple Blue (primary action color)
+    'blue': '#007AFF',
     'blue_hover': '#0051D5',
     'blue_light': 'rgba(0, 122, 255, 0.1)',
 
     # Status Colors
-    'success': '#34C759',  # oklch(0.66 0.17 150)
-    'warning': '#FF9F0A',  # oklch(0.72 0.17 60)
-    'danger': '#FF3B30',  # oklch(0.64 0.22 27)
+    'success': '#34C759',
+    'warning': '#FF9F0A',
+    'danger': '#FF3B30',
 
-    # Borders (More refined from reference)
+    # Borders - More refined
     'border': 'rgba(0, 0, 0, 0.06)',
-    'border_medium': 'rgba(0, 0, 0, 0.08)',
+    'border_medium': 'rgba(0, 0, 0, 0.07)',
     'border_strong': 'rgba(0, 0, 0, 0.12)',
 
-    # Accent states
+    # Accent hover states
     'accent_bg': 'rgba(0, 122, 255, 0.08)',
-    'accent_fg': '#007AFF',
+    'accent_fg': 'rgba(0, 122, 255, 1)',
 
-    # Sidebar
+    # Sidebar colors
     'sidebar_bg': 'rgba(245, 245, 247, 0.72)',
     'sidebar_accent': 'rgba(0, 0, 0, 0.06)',
-
-    # Traffic lights (macOS chrome)
-    'traffic_red': '#FF5F56',
-    'traffic_yellow': '#FFBD2E',
-    'traffic_green': '#27C93F',
 }
 
 # ============================================================
-# TYPOGRAPHY
+# TYPOGRAPHY (SF Pro System)
 # ============================================================
 
 TYPOGRAPHY = """
@@ -84,14 +82,11 @@ SPACING = {
 }
 
 # ============================================================
-# SOPHISTICATED SHADOWS (From Reference Project)
+# SOPHISTICATED SHADOWS (Panel-based)
 # ============================================================
 
 SHADOWS = {
-    'sm': '0 1px 3px rgba(0, 0, 0, 0.06)',
-    'md': '0 2px 8px rgba(0, 0, 0, 0.08)',
-    'lg': '0 4px 16px rgba(0, 0, 0, 0.10)',
-    # Reference-specific multi-layer shadows
+    # Panel shadows (refined, multi-layer)
     'panel': '0 0 0 0.5px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04), 0 8px 24px -12px rgba(0, 0, 0, 0.08)',
     'panel_hover': '0 0 0 0.5px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.04), 0 16px 36px -16px rgba(0, 0, 0, 0.14)',
     'window': '0 0 0 0.5px rgba(0, 0, 0, 0.12), 0 30px 80px -20px rgba(0, 0, 0, 0.22)',
@@ -99,7 +94,7 @@ SHADOWS = {
 }
 
 # ============================================================
-# BORDER RADIUS (Reference Scale)
+# BORDER RADIUS
 # ============================================================
 
 RADIUS = {
@@ -107,17 +102,20 @@ RADIUS = {
     'md': '8px',
     'lg': '12px',
     'xl': '16px',
-    'xxl': '22px',  # Reference panel radius
+    'xxl': '22px',  # Panel radius
 }
 
 
-def apply_macos_base_styles():
-    """Apply the foundational macOS design system styles with reference enhancements"""
+def apply_reference_design_system():
+    """
+    Apply the complete reference-inspired design system
+    This enhances the existing macOS design with the reference's visual language
+    """
 
     st.markdown(f"""
         <style>
         /* ============================================================ */
-        /* IMPORT SF PRO FONT (FALLBACK TO SYSTEM) */
+        /* ENHANCED TYPOGRAPHY & BASE */
         /* ============================================================ */
 
         * {{
@@ -129,6 +127,17 @@ def apply_macos_base_styles():
         }}
 
         /* ============================================================ */
+        /* GRADIENT DESKTOP BACKGROUND */
+        /* ============================================================ */
+
+        .stApp {{
+            background: radial-gradient(1200px 600px at 10% -10%, {COLORS['background_gradient_start']}, transparent 60%),
+                        radial-gradient(900px 500px at 100% 110%, {COLORS['background_gradient_end']}, transparent 60%),
+                        {COLORS['background']};
+            background-attachment: fixed;
+        }}
+
+        /* ============================================================ */
         /* HIDE STREAMLIT BRANDING */
         /* ============================================================ */
 
@@ -137,15 +146,8 @@ def apply_macos_base_styles():
         }}
 
         /* ============================================================ */
-        /* BASE APP LAYOUT WITH DESKTOP GRADIENT */
+        /* BASE LAYOUT */
         /* ============================================================ */
-
-        .stApp {{
-            background: radial-gradient(1200px 600px at 10% -10%, {COLORS['background_gradient_start']}, transparent 60%),
-                        radial-gradient(900px 500px at 100% 110%, {COLORS['background_gradient_end']}, transparent 60%),
-                        {COLORS['background']} !important;
-            background-attachment: fixed !important;
-        }}
 
         .block-container {{
             padding-top: 2rem !important;
@@ -154,20 +156,7 @@ def apply_macos_base_styles():
         }}
 
         /* ============================================================ */
-        /* PAGE TRANSITION ANIMATION */
-        /* ============================================================ */
-
-        .main .block-container {{
-            animation: page-in 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
-        }}
-
-        @keyframes page-in {{
-            from {{ opacity: 0; transform: translateY(6px); }}
-            to {{ opacity: 1; transform: translateY(0); }}
-        }}
-
-        /* ============================================================ */
-        /* TYPOGRAPHY HIERARCHY */
+        /* TYPOGRAPHY HIERARCHY (Enhanced) */
         /* ============================================================ */
 
         h1, h2, h3 {{
@@ -205,16 +194,47 @@ def apply_macos_base_styles():
             letter-spacing: -0.005em !important;
         }}
 
-        /* Secondary text */
-        .text-secondary {{
-            color: {COLORS['text_secondary']} !important;
+        /* ============================================================ */
+        /* PANEL-BASED CARDS (Reference Style) */
+        /* ============================================================ */
+
+        .panel {{
+            background: {COLORS['surface_primary']};
+            border-radius: {RADIUS['xxl']};
+            box-shadow: {SHADOWS['panel']};
+            transition: box-shadow 200ms ease, transform 200ms ease;
+            padding: {SPACING['xl']};
+            border: 1px solid {COLORS['border']};
+        }}
+
+        .panel:hover {{
+            box-shadow: {SHADOWS['panel_hover']};
+            transform: translateY(-1px);
+        }}
+
+        .panel-static {{
+            background: {COLORS['surface_primary']};
+            border-radius: {RADIUS['xxl']};
+            box-shadow: {SHADOWS['panel']};
+            padding: {SPACING['xl']};
+            border: 1px solid {COLORS['border']};
+        }}
+
+        /* Glass effect panels */
+        .glass-panel {{
+            background: {COLORS['surface_glass']};
+            backdrop-filter: blur(24px) saturate(180%);
+            border-radius: {RADIUS['xl']};
+            box-shadow: {SHADOWS['control']};
+            padding: {SPACING['lg']};
+            border: 1px solid {COLORS['border']};
         }}
 
         /* ============================================================ */
-        /* BUTTONS - ENHANCED MACOS STYLE */
+        /* ENHANCED BUTTONS */
         /* ============================================================ */
 
-        /* Primary Button (Apple Blue) */
+        /* Primary Button */
         button[kind="primary"], .stButton > button[kind="primary"] {{
             background: {COLORS['blue']} !important;
             color: white !important;
@@ -227,17 +247,17 @@ def apply_macos_base_styles():
             box-shadow: {SHADOWS['control']} !important;
         }}
 
-        button[kind="primary"]:hover, .stButton > button[kind="primary"]:hover {{
+        button[kind="primary"]:hover {{
             background: {COLORS['blue_hover']} !important;
             transform: translateY(-1px) !important;
             box-shadow: {SHADOWS['panel']} !important;
         }}
 
-        button[kind="primary"]:active, .stButton > button[kind="primary"]:active {{
+        button[kind="primary"]:active {{
             transform: translateY(0) !important;
         }}
 
-        /* Secondary Button (Neutral) */
+        /* Secondary Button */
         button[kind="secondary"], .stButton > button[kind="secondary"] {{
             background: {COLORS['surface_primary']} !important;
             color: {COLORS['text_primary']} !important;
@@ -250,14 +270,14 @@ def apply_macos_base_styles():
             box-shadow: {SHADOWS['control']} !important;
         }}
 
-        button[kind="secondary"]:hover, .stButton > button[kind="secondary"]:hover {{
+        button[kind="secondary"]:hover {{
             background: {COLORS['surface_secondary']} !important;
             border-color: {COLORS['border_medium']} !important;
             transform: translateY(-1px) !important;
         }}
 
         /* Tertiary/Destructive Button */
-        button[kind="tertiary"], .stButton > button[kind="tertiary"] {{
+        button[kind="tertiary"] {{
             background: transparent !important;
             color: {COLORS['danger']} !important;
             border: 1px solid {COLORS['border']} !important;
@@ -268,37 +288,13 @@ def apply_macos_base_styles():
             transition: all 0.15s ease !important;
         }}
 
-        button[kind="tertiary"]:hover, .stButton > button[kind="tertiary"]:hover {{
+        button[kind="tertiary"]:hover {{
             background: rgba(255, 59, 48, 0.08) !important;
             border-color: {COLORS['danger']} !important;
         }}
 
-        /* Default Button */
-        button, .stButton > button {{
-            background: {COLORS['surface_primary']} !important;
-            color: {COLORS['text_primary']} !important;
-            border: 1px solid {COLORS['border']} !important;
-            border-radius: {RADIUS['md']} !important;
-            padding: 8px 16px !important;
-            font-size: 0.875rem !important;
-            font-weight: 500 !important;
-            transition: all 0.15s ease !important;
-            box-shadow: {SHADOWS['control']} !important;
-        }}
-
-        button:hover, .stButton > button:hover {{
-            background: {COLORS['surface_secondary']} !important;
-            border-color: {COLORS['border_medium']} !important;
-        }}
-
-        /* Disabled state */
-        button:disabled, .stButton > button:disabled {{
-            opacity: 0.4 !important;
-            cursor: not-allowed !important;
-        }}
-
         /* ============================================================ */
-        /* INPUTS - ENHANCED MACOS STYLE */
+        /* REFINED INPUTS */
         /* ============================================================ */
 
         input, textarea, .stTextInput input, .stTextArea textarea {{
@@ -330,30 +326,69 @@ def apply_macos_base_styles():
         }}
 
         /* ============================================================ */
-        /* CARDS & PANELS (Reference Style) */
+        /* ENHANCED DATAFRAMES / TABLES */
         /* ============================================================ */
 
-        .panel {{
-            background: {COLORS['surface_primary']};
-            border-radius: {RADIUS['xxl']};
-            box-shadow: {SHADOWS['panel']};
-            transition: box-shadow 200ms ease, transform 200ms ease;
-            padding: {SPACING['xl']};
-            border: 1px solid {COLORS['border']};
+        .stDataFrame {{
+            border: 1px solid {COLORS['border']} !important;
+            border-radius: {RADIUS['lg']} !important;
+            overflow: hidden !important;
+            box-shadow: {SHADOWS['control']} !important;
         }}
 
-        .panel:hover {{
+        /* Table row hover */
+        .stDataFrame tbody tr:hover {{
+            background: {COLORS['surface_secondary']} !important;
+        }}
+
+        /* ============================================================ */
+        /* PAGE TRANSITION ANIMATION */
+        /* ============================================================ */
+
+        .main .block-container {{
+            animation: page-in 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
+        }}
+
+        @keyframes page-in {{
+            from {{ opacity: 0; transform: translateY(6px); }}
+            to {{ opacity: 1; transform: translateY(0); }}
+        }}
+
+        /* ============================================================ */
+        /* STAT CARDS (Reference Style) */
+        /* ============================================================ */
+
+        .stat-card {{
+            background: {COLORS['surface_primary']};
+            border: 1px solid {COLORS['border']};
+            border-radius: {RADIUS['xl']};
+            padding: {SPACING['lg']};
+            box-shadow: {SHADOWS['panel']};
+            transition: all 200ms ease;
+        }}
+
+        .stat-card:hover {{
             box-shadow: {SHADOWS['panel_hover']};
             transform: translateY(-1px);
         }}
 
-        /* Default Streamlit Container */
-        [data-testid="stContainer"] {{
-            background: {COLORS['surface_primary']} !important;
-            border: 1px solid {COLORS['border']} !important;
-            border-radius: {RADIUS['xxl']} !important;
-            padding: {SPACING['lg']} !important;
-            box-shadow: {SHADOWS['panel']} !important;
+        .stat-card-value {{
+            font-size: 2rem !important;
+            font-weight: 600 !important;
+            color: {COLORS['text_primary']} !important;
+            letter-spacing: -0.02em !important;
+        }}
+
+        .stat-card-label {{
+            font-size: 0.8125rem !important;
+            color: {COLORS['text_secondary']} !important;
+            font-weight: 500 !important;
+        }}
+
+        .stat-card-hint {{
+            font-size: 0.75rem !important;
+            color: {COLORS['text_tertiary']} !important;
+            margin-top: {SPACING['xs']};
         }}
 
         /* ============================================================ */
@@ -364,17 +399,6 @@ def apply_macos_base_styles():
             border: none !important;
             border-top: 1px solid {COLORS['border']} !important;
             margin: {SPACING['xl']} 0 !important;
-        }}
-
-        /* ============================================================ */
-        /* DATAFRAME / TABLES */
-        /* ============================================================ */
-
-        .stDataFrame {{
-            border: 1px solid {COLORS['border']} !important;
-            border-radius: {RADIUS['lg']} !important;
-            overflow: hidden !important;
-            box-shadow: {SHADOWS['control']} !important;
         }}
 
         /* ============================================================ */
@@ -389,7 +413,7 @@ def apply_macos_base_styles():
         }}
 
         /* ============================================================ */
-        /* TRANSITIONS */
+        /* SMOOTH TRANSITIONS */
         /* ============================================================ */
 
         * {{
@@ -398,7 +422,7 @@ def apply_macos_base_styles():
         }}
 
         /* ============================================================ */
-        /* AI SURFACE */
+        /* AI SURFACE (Gradient for AI features) */
         /* ============================================================ */
 
         .ai-surface {{
@@ -412,42 +436,96 @@ def apply_macos_base_styles():
     """, unsafe_allow_html=True)
 
 
-def apply_macos_window_shell():
-    """Apply macOS-style window chrome/shell at the top"""
+def apply_sidebar_navigation(active_tab=None, tabs=None, on_tab_change=None):
+    """
+    Create a sidebar-style navigation inspired by the reference design
+    This replaces the top tab navigation with a sidebar approach
+    """
+
+    if not tabs:
+        return
 
     st.markdown(f"""
         <style>
-        /* macOS Traffic Lights - Visual Only */
-        .macos-window-controls {{
-            position: fixed;
-            top: 12px;
-            left: 12px;
+        .sidebar-nav {{
+            background: {COLORS['sidebar_bg']};
+            backdrop-filter: blur(24px);
+            border-radius: {RADIUS['xl']};
+            padding: {SPACING['md']};
+            border: 1px solid {COLORS['border']};
+            margin-bottom: {SPACING['xl']};
+        }}
+
+        .sidebar-section-label {{
+            font-size: 0.6875rem !important;
+            font-weight: 500 !important;
+            color: {COLORS['text_tertiary']} !important;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: {SPACING['sm']};
+            padding-left: {SPACING['sm']};
+        }}
+
+        .sidebar-nav-item {{
             display: flex;
-            gap: 8px;
-            z-index: 1000;
+            align-items: center;
+            gap: {SPACING['sm']};
+            padding: {SPACING['sm']} {SPACING['md']};
+            border-radius: {RADIUS['md']};
+            font-size: 0.875rem !important;
+            font-weight: 500 !important;
+            color: {COLORS['text_primary']} !important;
+            cursor: pointer;
+            transition: all 150ms ease;
+            margin-bottom: 2px;
         }}
 
-        .macos-dot {{
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            opacity: 0.85;
-            transition: opacity 0.15s ease;
+        .sidebar-nav-item:hover {{
+            background: {COLORS['sidebar_accent']};
         }}
 
-        .macos-dot:hover {{
-            opacity: 1;
+        .sidebar-nav-item.active {{
+            background: {COLORS['accent_bg']};
+            color: {COLORS['accent_fg']} !important;
+            font-weight: 600 !important;
         }}
 
-        .macos-dot.close {{ background: {COLORS['traffic_red']}; }}
-        .macos-dot.minimize {{ background: {COLORS['traffic_yellow']}; }}
-        .macos-dot.maximize {{ background: {COLORS['traffic_green']}; }}
+        .sidebar-nav-icon {{
+            width: 16px;
+            height: 16px;
+        }}
+        </style>
+    """, unsafe_allow_html=True)
 
+
+def create_page_header(title, subtitle=None, right_content=None):
+    """
+    Create a page header in the reference design style
+    """
+
+    st.markdown(f"""
+        <style>
+        .page-header {{
+            margin-bottom: {SPACING['xl']};
+        }}
+
+        .page-header-title {{
+            font-size: 1.75rem !important;
+            font-weight: 600 !important;
+            color: {COLORS['text_primary']} !important;
+            letter-spacing: -0.02em !important;
+            margin: 0 !important;
+        }}
+
+        .page-header-subtitle {{
+            font-size: 0.875rem !important;
+            color: {COLORS['text_secondary']} !important;
+            margin-top: {SPACING['xs']};
+        }}
         </style>
 
-        <div class="macos-window-controls">
-            <div class="macos-dot close"></div>
-            <div class="macos-dot minimize"></div>
-            <div class="macos-dot maximize"></div>
+        <div class="page-header">
+            <h1 class="page-header-title">{title}</h1>
+            {f'<p class="page-header-subtitle">{subtitle}</p>' if subtitle else ''}
         </div>
     """, unsafe_allow_html=True)

@@ -1,7 +1,7 @@
 """
-Student Screen - macOS Style
+Student Screen - Reference-Inspired macOS Style
 Student dashboard with FaceID login and subject enrollment
-Preserving all existing functionality with new macOS visual design
+Matching the visual design of pixel-perfect-snap-8916
 """
 
 import streamlit as st
@@ -22,6 +22,7 @@ from src.pipelines.voice_pipeline import get_voice_embedding
 from PIL import Image
 import numpy as np
 import time
+from datetime import datetime
 
 
 def student_screen():
@@ -38,55 +39,124 @@ def student_screen():
 
 
 def student_dashboard():
-    """Student dashboard - view enrolled subjects and attendance"""
+    """Student dashboard with reference-inspired layout and stat cards"""
 
     student_data = st.session_state.student_data
     student_id = student_data['student_id']
 
-    # Header with logout
-    c1, c2 = st.columns([3, 1], vertical_alignment='center')
+    # Load subjects and attendance data
+    with st.spinner('Loading your enrolled classes...'):
+        subjects = get_student_subjects(student_id)
+        logs = get_student_attendance(student_id)
+
+    # Calculate attendance stats
+    total_classes = len(logs)
+    attended_classes = sum(1 for log in logs if log.get('is_present'))
+    attendance_rate = (attended_classes / total_classes * 100) if total_classes > 0 else 0
+    enrolled_count = len(subjects) if subjects else 0
+
+    # Top Bar (Reference Style)
+    c1, c2 = st.columns([3, 2], vertical_alignment='center')
 
     with c1:
         header_dashboard()
 
     with c2:
+        cols = st.columns([2, 1], vertical_alignment='center')
+        with cols[0]:
+            initials = ''.join([part[0] for part in student_data['name'].split()][:2]).upper()
+            st.markdown(f"""
+                <div class="user-badge" style="display: flex; align-items: center; gap: {SPACING['sm']}; background: {COLORS['surface_primary']}; padding: {SPACING['xs']} {SPACING['md']}; border-radius: {RADIUS['xl']}; border: 1px solid {COLORS['border']}; box-shadow: {SHADOWS['control']};">
+                    <div class="user-avatar" style="width: 28px; height: 28px; border-radius: 50%; background: {COLORS['blue']}; color: white; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 600;">{initials}</div>
+                    <div class="user-info" style="text-align: left;">
+                        <div class="user-name" style="font-size: 0.8125rem; font-weight: 600; color: {COLORS['text_primary']}; line-height: 1.2;">{student_data['name']}</div>
+                        <div class="user-role" style="font-size: 0.6875rem; color: {COLORS['text_tertiary']}; line-height: 1;">Student</div>
+                    </div>
+                </div>
+            """, unsafe_allow_html=True)
+
+        with cols[1]:
+            if st.button("Sign Out", type='secondary', key='student_logout', icon=':material/logout:', width='stretch'):
+                st.session_state['is_logged_in'] = False
+                del st.session_state.student_data
+                st.rerun()
+
+    # Page Header (Reference Style)
+    date_str = datetime.now().strftime("%A, %B %d")
+    st.markdown(f"""
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: {SPACING['xl']};">
+            <div>
+                <h1 style="margin: 0; font-size: 1.75rem;">Student Portal</h1>
+                <p style="margin: {SPACING['xs']} 0 0 0; color: {COLORS['text_secondary']}; font-size: 0.875rem;">
+                    Track your attendance and enrolled classes
+                </p>
+            </div>
+            <div style="background: {COLORS['surface_primary']}; padding: 4px 12px; border-radius: {RADIUS['xl']}; font-size: 0.75rem; color: {COLORS['text_secondary']}; border: 1px solid {COLORS['border']}; box-shadow: {SHADOWS['control']};">
+                📅 {date_str}
+            </div>
+        </div>
+    """, unsafe_allow_html=True)
+
+    # Stat Cards Row (Reference Style)
+    stat_col1, stat_col2, stat_col3, stat_col4 = st.columns(4)
+
+    with stat_col1:
         st.markdown(f"""
-            <div style="text-align: right;">
-                <div style="font-size: 0.75rem; color: {COLORS['text_tertiary']};">Logged in as</div>
-                <div style="font-size: 0.9375rem; font-weight: 600; color: {COLORS['text_primary']};">{student_data['name']}</div>
+            <div class="stat-card">
+                <div class="stat-card-label">Enrolled Classes</div>
+                <div class="stat-card-value">{enrolled_count}</div>
+                <div class="stat-card-hint">Active subjects</div>
             </div>
         """, unsafe_allow_html=True)
 
-        if st.button("Logout", type='secondary', key='student_logout', shortcut="control+backspace", icon=':material/logout:'):
-            st.session_state['is_logged_in'] = False
-            del st.session_state.student_data
-            st.rerun()
+    with stat_col2:
+        st.markdown(f"""
+            <div class="stat-card">
+                <div class="stat-card-label">Classes Attended</div>
+                <div class="stat-card-value">{attended_classes}</div>
+                <div class="stat-card-hint">Out of {total_classes} total</div>
+            </div>
+        """, unsafe_allow_html=True)
 
-    st.markdown("<br>", unsafe_allow_html=True)
+    with stat_col3:
+        rate_color = COLORS['success'] if attendance_rate >= 75 else COLORS['warning'] if attendance_rate >= 60 else COLORS['danger']
+        st.markdown(f"""
+            <div class="stat-card">
+                <div class="stat-card-label">Attendance Rate</div>
+                <div class="stat-card-value" style="color: {rate_color};">{attendance_rate:.1f}%</div>
+                <div class="stat-card-hint">{"Good standing" if attendance_rate >= 75 else "Needs attention"}</div>
+            </div>
+        """, unsafe_allow_html=True)
 
-    # Enrolled subjects header
-    c1, c2 = st.columns([3, 1], vertical_alignment='bottom')
+    with stat_col4:
+        st.markdown(f"""
+            <div class="stat-card">
+                <div class="stat-card-label">FaceID Status</div>
+                <div class="stat-card-value" style="color: {COLORS['success']};">Active</div>
+                <div class="stat-card-hint">Biometrics enrolled</div>
+            </div>
+        """, unsafe_allow_html=True)
+
+    st.markdown(f"<div style='height: {SPACING['xl']};'></div>", unsafe_allow_html=True)
+
+    # Enrolled Classes Section Header
+    c1, c2 = st.columns([3, 1], vertical_alignment='center')
 
     with c1:
         st.markdown(f"""
-            <div style="margin-bottom: {SPACING['lg']};">
-                <h2 style="margin-bottom: {SPACING['xs']};">Your Subjects</h2>
-                <p style="color: {COLORS['text_secondary']}; font-size: 0.9375rem;">
-                    Subjects you're enrolled in
+            <div>
+                <h2 style="margin: 0;">Enrolled Classes</h2>
+                <p style="color: {COLORS['text_secondary']}; margin: {SPACING['xs']} 0 0 0; font-size: 0.875rem;">
+                    View attendance details for each class
                 </p>
             </div>
         """, unsafe_allow_html=True)
 
     with c2:
-        if st.button('Enroll in Subject', type='primary', width='stretch', icon=':material/add:'):
+        if st.button('Enroll in Class', type='primary', width='stretch', icon=':material/add:'):
             enroll_dialog()
 
-    st.divider()
-
-    # Load subjects and attendance data
-    with st.spinner('Loading your enrolled subjects...'):
-        subjects = get_student_subjects(student_id)
-        logs = get_student_attendance(student_id)
+    st.markdown(f"<div style='height: {SPACING['lg']};'></div>", unsafe_allow_html=True)
 
     # Calculate attendance stats per subject
     stats_map = {}
@@ -128,20 +198,20 @@ def student_dashboard():
                     code=sub['subject_code'],
                     section=sub['section'],
                     stats=[
-                        ('📅', 'Classes', stats['total']),
+                        ('📅', 'Sessions', stats['total']),
                         ('✅', 'Attended', stats['attended']),
                         ('📊', 'Rate', f"{attendance_pct:.0f}%"),
                     ],
                     footer_callback=unenroll_button
                 )
     else:
-        st.info("📚 You're not enrolled in any subjects yet. Use the 'Enroll in Subject' button above to join a class.")
+        st.info("📚 You're not enrolled in any classes yet. Click 'Enroll in Class' above to join with a code.")
 
     footer_dashboard()
 
 
 def student_screen_login():
-    """Student login screen with FaceID"""
+    """Student login screen with FaceID - Reference panel style"""
 
     c1, c2 = st.columns([3, 1], vertical_alignment='center')
 
@@ -149,49 +219,28 @@ def student_screen_login():
         header_dashboard()
 
     with c2:
-        if st.button("← Back to Home", type='secondary', key='studentbackbtn', shortcut="control+backspace"):
+        if st.button("← Back to Home", type='secondary', key='studentbackbtn'):
             st.session_state['login_type'] = None
             st.rerun()
 
-    st.markdown("<br><br>", unsafe_allow_html=True)
+    st.markdown("<br>", unsafe_allow_html=True)
 
-    # FaceID login in centered container
+    # FaceID login in centered panel
     col1, col2, col3 = st.columns([1, 2, 1])
 
     with col2:
         st.markdown(f"""
-            <div style="text-align: center; margin-bottom: {SPACING['xl']};">
-                <h2>Student Login</h2>
-                <p style="color: {COLORS['text_secondary']};">Sign in with Face ID</p>
+            <div class="panel" style="text-align: center; margin-bottom: {SPACING['lg']};">
+                <div style="font-size: 2.5rem; margin-bottom: {SPACING['sm']};">👤</div>
+                <h2 style="margin: 0 0 {SPACING['xs']} 0;">Face ID Login</h2>
+                <p style="color: {COLORS['text_secondary']}; margin: 0; font-size: 0.875rem;">
+                    Look directly into the camera to sign in
+                </p>
             </div>
         """, unsafe_allow_html=True)
 
-        st.markdown(f"""
-            <style>
-            .faceid-container {{
-                background: {COLORS['surface_primary']};
-                border: 2px dashed {COLORS['border']};
-                border-radius: {RADIUS['lg']};
-                padding: {SPACING['xl']};
-                text-align: center;
-                margin-bottom: {SPACING['lg']};
-            }}
-
-            .faceid-icon {{
-                font-size: 3rem;
-                color: {COLORS['text_tertiary']};
-                margin-bottom: {SPACING['md']};
-            }}
-
-            .faceid-instruction {{
-                font-size: 0.875rem;
-                color: {COLORS['text_secondary']};
-            }}
-            </style>
-        """, unsafe_allow_html=True)
-
         show_registration = False
-        photo_source = st.camera_input("Position your face in the frame")
+        photo_source = st.camera_input("Position your face in the frame", label_visibility='collapsed')
 
         if photo_source:
             img = np.array(Image.open(photo_source))
@@ -217,17 +266,17 @@ def student_screen_login():
                             time.sleep(1)
                             st.rerun()
                     else:
-                        st.info('🆕 Face not recognized. You might be a new student!')
+                        st.info('🆕 Face not recognized. Complete registration below.')
                         show_registration = True
 
         if show_registration:
             st.markdown(f"<div style='height: {SPACING['lg']};'></div>", unsafe_allow_html=True)
 
             st.markdown(f"""
-                <div style="background: {COLORS['surface_secondary']}; padding: {SPACING['lg']}; border-radius: {RADIUS['lg']}; margin-bottom: {SPACING['md']};">
-                    <h3>Create New Student Profile</h3>
-                    <p style="color: {COLORS['text_secondary']}; font-size: 0.875rem;">
-                        Register your face and voice for attendance tracking
+                <div class="ai-surface" style="margin-bottom: {SPACING['md']};">
+                    <h3 style="margin: 0 0 {SPACING['xs']} 0;">New Student Registration</h3>
+                    <p style="color: {COLORS['text_secondary']}; font-size: 0.8125rem; margin: 0;">
+                        Your face will be enrolled for automatic attendance
                     </p>
                 </div>
             """, unsafe_allow_html=True)
@@ -235,24 +284,24 @@ def student_screen_login():
             new_name = st.text_input("Full Name", placeholder='Enter your full name', label_visibility='collapsed')
 
             st.markdown(f"""
-                <div style="margin: {SPACING['lg']} 0;">
-                    <h4 style="font-size: 0.875rem; font-weight: 600; color: {COLORS['text_primary']};">
+                <div style="margin: {SPACING['md']} 0;">
+                    <div style="font-size: 0.8125rem; font-weight: 600; color: {COLORS['text_primary']};">
                         Voice Enrollment (Optional)
-                    </h4>
-                    <p style="font-size: 0.8125rem; color: {COLORS['text_secondary']};">
+                    </div>
+                    <div style="font-size: 0.75rem; color: {COLORS['text_secondary']};">
                         Record your voice for voice-based attendance
-                    </p>
+                    </div>
                 </div>
             """, unsafe_allow_html=True)
 
             audio_data = None
 
             try:
-                audio_data = st.audio_input('Record a short phrase like "I am present" or "My name is [Your Name]"')
+                audio_data = st.audio_input('Record "I am present"')
             except Exception:
                 st.error('❌ Audio recording failed')
 
-            if st.button('Create Account', type='primary', width='stretch', icon=':material/person_add:'):
+            if st.button('Create Student Profile', type='primary', width='stretch', icon=':material/person_add:'):
                 if new_name:
                     with st.spinner('🔧 Creating your profile...'):
                         img = np.array(Image.open(photo_source))
@@ -276,7 +325,7 @@ def student_screen_login():
                                 time.sleep(1)
                                 st.rerun()
                         else:
-                            st.error('❌ Could not capture your facial features. Please try again with better lighting.')
+                            st.error('❌ Could not capture facial features. Please ensure good lighting.')
                 else:
                     st.warning('⚠️ Please enter your name')
 

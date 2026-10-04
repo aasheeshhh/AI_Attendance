@@ -1,7 +1,7 @@
 """
-Teacher Screen - macOS Style
+Teacher Screen - Reference-Inspired macOS Style
 Complete teacher dashboard with attendance, subjects, and records
-Preserving all existing functionality with new macOS visual design
+Matching the visual design of pixel-perfect-snap-8916
 """
 
 import streamlit as st
@@ -42,87 +42,170 @@ def teacher_screen():
 
 
 def teacher_dashboard():
-    """Teacher dashboard with tabs for attendance, subjects, and records"""
+    """Teacher dashboard with reference-inspired layout and navigation"""
 
     teacher_data = st.session_state.teacher_data
+    teacher_id = teacher_data['teacher_id']
 
-    # macOS-style navigation tabs
+    # Get subjects and records for stats
+    subjects = get_teacher_subjects(teacher_id)
+    records = get_attendance_for_teacher(teacher_id)
+
+    # Calculate overview stats
+    total_subjects = len(subjects) if subjects else 0
+    total_students = sum(s.get('total_students', 0) for s in subjects) if subjects else 0
+    total_sessions = len(set(r.get('timestamp') for r in records)) if records else 0
+
+    # Top bar inspired by reference
     st.markdown(f"""
         <style>
-        .teacher-nav {{
-            display: flex;
-            gap: {SPACING['sm']};
-            padding: {SPACING['md']} 0;
-            border-bottom: 1px solid {COLORS['border']};
-            margin-bottom: {SPACING['xl']};
-        }}
-
-        .teacher-nav-item {{
-            padding: {SPACING['sm']} {SPACING['lg']};
-            border-radius: {RADIUS['md']};
-            font-size: 0.875rem !important;
-            font-weight: 500 !important;
-            color: {COLORS['text_secondary']} !important;
-            cursor: pointer;
-            transition: all 0.15s ease;
-        }}
-
-        .teacher-nav-item.active {{
-            background: {COLORS['blue']};
-            color: white !important;
-        }}
-
-        .teacher-nav-item:hover:not(.active) {{
-            background: {COLORS['surface_secondary']};
-        }}
-
-        .welcome-section {{
+        .top-bar {{
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: {SPACING['lg']};
-            background: {COLORS['surface_primary']};
-            border: 1px solid {COLORS['border']};
-            border-radius: {RADIUS['lg']};
-            margin-bottom: {SPACING['xl']};
+            padding: {SPACING['md']} 0;
+            margin-bottom: {SPACING['lg']};
+            border-bottom: 1px solid {COLORS['border']};
         }}
 
-        .welcome-text {{
-            font-size: 1.5rem !important;
+        .top-bar-left {{
+            display: flex;
+            align-items: center;
+            gap: {SPACING['md']};
+        }}
+
+        .top-bar-right {{
+            display: flex;
+            align-items: center;
+            gap: {SPACING['md']};
+        }}
+
+        .user-badge {{
+            display: flex;
+            align-items: center;
+            gap: {SPACING['sm']};
+            background: {COLORS['surface_primary']};
+            padding: {SPACING['xs']} {SPACING['md']};
+            border-radius: {RADIUS['xl']};
+            border: 1px solid {COLORS['border']};
+            box-shadow: {SHADOWS['control']};
+        }}
+
+        .user-avatar {{
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: {COLORS['blue']};
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }}
+
+        .user-info {{
+            text-align: left;
+        }}
+
+        .user-name {{
+            font-size: 0.8125rem !important;
             font-weight: 600 !important;
             color: {COLORS['text_primary']} !important;
-            margin: 0 !important;
+            line-height: 1.2 !important;
         }}
 
-        .welcome-subtitle {{
-            font-size: 0.875rem !important;
-            color: {COLORS['text_secondary']} !important;
-            margin-top: {SPACING['xs']} !important;
+        .user-role {{
+            font-size: 0.6875rem !important;
+            color: {COLORS['text_tertiary']} !important;
+            line-height: 1 !important;
         }}
         </style>
     """, unsafe_allow_html=True)
 
-    # Welcome section with logout
-    c1, c2 = st.columns([3, 1], vertical_alignment='center')
+    # Top Bar
+    c1, c2 = st.columns([3, 2], vertical_alignment='center')
     with c1:
         header_dashboard()
 
     with c2:
+        cols = st.columns([2, 1], vertical_alignment='center')
+        with cols[0]:
+            initials = ''.join([part[0] for part in teacher_data['name'].split()][:2]).upper()
+            st.markdown(f"""
+                <div class="user-badge">
+                    <div class="user-avatar">{initials}</div>
+                    <div class="user-info">
+                        <div class="user-name">{teacher_data['name']}</div>
+                        <div class="user-role">Teacher</div>
+                    </div>
+                </div>
+            """, unsafe_allow_html=True)
+
+        with cols[1]:
+            if st.button("Sign Out", type='secondary', key='teacher_logout', icon=':material/logout:', width='stretch'):
+                st.session_state['is_logged_in'] = False
+                del st.session_state.teacher_data
+                st.rerun()
+
+    # Page Header (Reference Style)
+    date_str = datetime.now().strftime("%A, %B %d")
+    st.markdown(f"""
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: {SPACING['xl']};">
+            <div>
+                <h1 style="margin: 0; font-size: 1.75rem;">Teacher Dashboard</h1>
+                <p style="margin: {SPACING['xs']} 0 0 0; color: {COLORS['text_secondary']}; font-size: 0.875rem;">
+                    Manage attendance, subjects, and view class insights
+                </p>
+            </div>
+            <div style="background: {COLORS['surface_primary']}; padding: 4px 12px; border-radius: {RADIUS['xl']}; font-size: 0.75rem; color: {COLORS['text_secondary']}; border: 1px solid {COLORS['border']}; box-shadow: {SHADOWS['control']};">
+                📅 {date_str}
+            </div>
+        </div>
+    """, unsafe_allow_html=True)
+
+    # Stat Cards Row (Reference Style)
+    stat_col1, stat_col2, stat_col3, stat_col4 = st.columns(4)
+
+    with stat_col1:
         st.markdown(f"""
-            <div style="text-align: right;">
-                <div style="font-size: 0.75rem; color: {COLORS['text_tertiary']};">Logged in as</div>
-                <div style="font-size: 0.9375rem; font-weight: 600; color: {COLORS['text_primary']};">{teacher_data['name']}</div>
+            <div class="stat-card">
+                <div class="stat-card-label">Total Classes</div>
+                <div class="stat-card-value">{total_subjects}</div>
+                <div class="stat-card-hint">Active subjects</div>
             </div>
         """, unsafe_allow_html=True)
 
-        if st.button("Logout", type='secondary', key='teacher_logout', shortcut="control+backspace", icon=':material/logout:'):
-            st.session_state['is_logged_in'] = False
-            del st.session_state.teacher_data
-            st.rerun()
+    with stat_col2:
+        st.markdown(f"""
+            <div class="stat-card">
+                <div class="stat-card-label">Total Students</div>
+                <div class="stat-card-value">{total_students}</div>
+                <div class="stat-card-hint">Enrolled across classes</div>
+            </div>
+        """, unsafe_allow_html=True)
 
-    st.markdown("<br>", unsafe_allow_html=True)
+    with stat_col3:
+        st.markdown(f"""
+            <div class="stat-card">
+                <div class="stat-card-label">Attendance Sessions</div>
+                <div class="stat-card-value">{total_sessions}</div>
+                <div class="stat-card-hint">Total recorded</div>
+            </div>
+        """, unsafe_allow_html=True)
 
-    # Navigation tabs
+    with stat_col4:
+        st.markdown(f"""
+            <div class="stat-card">
+                <div class="stat-card-label">AI Status</div>
+                <div class="stat-card-value" style="color: {COLORS['success']};">Ready</div>
+                <div class="stat-card-hint">Face & Voice recognition</div>
+            </div>
+        """, unsafe_allow_html=True)
+
+    st.markdown(f"<div style='height: {SPACING['xl']};'></div>", unsafe_allow_html=True)
+
+    # Navigation Section Tabs (Reference Style)
     if "current_teacher_tab" not in st.session_state:
         st.session_state.current_teacher_tab = 'take_attendance'
 
@@ -136,7 +219,7 @@ def teacher_dashboard():
 
     with tab2:
         type2 = "primary" if st.session_state.current_teacher_tab == 'manage_subjects' else "secondary"
-        if st.button('Manage Subjects', type=type2, width='stretch', icon=':material/school:'):
+        if st.button('Manage Classes', type=type2, width='stretch', icon=':material/school:'):
             st.session_state.current_teacher_tab = 'manage_subjects'
             st.rerun()
 
@@ -146,7 +229,7 @@ def teacher_dashboard():
             st.session_state.current_teacher_tab = 'attendance_records'
             st.rerun()
 
-    st.divider()
+    st.markdown(f"<div style='height: {SPACING['lg']};'></div>", unsafe_allow_html=True)
 
     # Route to appropriate tab
     if st.session_state.current_teacher_tab == "take_attendance":
@@ -160,15 +243,15 @@ def teacher_dashboard():
 
 
 def teacher_tab_take_attendance():
-    """Take attendance tab - face or voice recognition"""
+    """Take attendance tab with reference-inspired panel layout"""
 
     teacher_id = st.session_state.teacher_data['teacher_id']
 
     st.markdown(f"""
-        <div style="margin-bottom: {SPACING['lg']};">
-            <h2 style="margin-bottom: {SPACING['xs']};">Take Attendance</h2>
-            <p style="color: {COLORS['text_secondary']}; font-size: 0.9375rem;">
-                Use AI-powered face or voice recognition to mark attendance
+        <div class="panel" style="margin-bottom: {SPACING['xl']};">
+            <h2 style="margin: 0 0 {SPACING['xs']} 0;">Take Attendance</h2>
+            <p style="color: {COLORS['text_secondary']}; margin: 0; font-size: 0.875rem;">
+                Select a class and choose your preferred AI recognition method
             </p>
         </div>
     """, unsafe_allow_html=True)
@@ -179,7 +262,7 @@ def teacher_tab_take_attendance():
     subjects = get_teacher_subjects(teacher_id)
 
     if not subjects:
-        st.warning('📚 You haven\'t created any subjects yet. Create one to begin taking attendance.')
+        st.warning('📚 You haven\'t created any classes yet. Create one in "Manage Classes" to begin taking attendance.')
         return
 
     subject_options = {f"{s['name']} - {s['subject_code']}": s['subject_id'] for s in subjects}
@@ -187,7 +270,7 @@ def teacher_tab_take_attendance():
     col1, col2 = st.columns([3, 1], vertical_alignment='bottom')
 
     with col1:
-        selected_subject_label = st.selectbox('Select Subject', options=list(subject_options.keys()))
+        selected_subject_label = st.selectbox('Select Class', options=list(subject_options.keys()))
 
     with col2:
         if st.button('Add Photos', type='primary', icon=':material/add_a_photo:', width='stretch'):
@@ -195,16 +278,21 @@ def teacher_tab_take_attendance():
 
     selected_subject_id = subject_options[selected_subject_label]
 
-    st.divider()
+    st.markdown(f"<div style='height: {SPACING['lg']};'></div>", unsafe_allow_html=True)
 
-    # Display added photos
+    # Display added photos in panel
     if st.session_state.attendance_images:
-        st.markdown(f"<h3 style='margin-bottom: {SPACING['md']};'>Added Photos ({len(st.session_state.attendance_images)})</h3>", unsafe_allow_html=True)
-        gallery_cols = st.columns(4)
+        st.markdown(f"""
+            <div class="panel" style="margin-bottom: {SPACING['lg']};">
+                <h3 style="margin: 0 0 {SPACING['md']} 0;">Classroom Photos ({len(st.session_state.attendance_images)})</h3>
+        """, unsafe_allow_html=True)
 
+        gallery_cols = st.columns(4)
         for idx, img in enumerate(st.session_state.attendance_images):
             with gallery_cols[idx % 4]:
                 st.image(img, use_container_width=True, caption=f'Photo {idx+1}')
+
+        st.markdown("</div>", unsafe_allow_html=True)
 
     has_photos = bool(st.session_state.attendance_images)
 
@@ -212,7 +300,7 @@ def teacher_tab_take_attendance():
     c1, c2, c3 = st.columns(3)
 
     with c1:
-        if st.button('Clear All Photos', width='stretch', type='tertiary', icon=':material/delete:', disabled=not has_photos):
+        if st.button('Clear Photos', width='stretch', type='tertiary', icon=':material/delete:', disabled=not has_photos):
             st.session_state.attendance_images = []
             st.session_state.pop('attendance_image_hashes', None)
             st.session_state.pop('dialog_cam', None)
@@ -265,64 +353,68 @@ def teacher_tab_take_attendance():
                 attendance_result_dialog(pd.DataFrame(results), attendance_to_log)
 
     with c3:
-        if st.button('Use Voice Attendance', type='primary', width='stretch', icon=':material/mic:'):
+        if st.button('Voice Attendance', type='primary', width='stretch', icon=':material/mic:'):
             voice_attendance_dialog(selected_subject_id)
 
 
 def teacher_tab_manage_subjects():
-    """Manage subjects tab"""
+    """Manage subjects tab with reference-inspired card grid"""
 
     teacher_id = st.session_state.teacher_data['teacher_id']
 
-    col1, col2 = st.columns([3, 1], vertical_alignment='bottom')
+    col1, col2 = st.columns([3, 1], vertical_alignment='center')
 
     with col1:
         st.markdown(f"""
-            <div style="margin-bottom: {SPACING['lg']};">
-                <h2 style="margin-bottom: {SPACING['xs']};">Manage Subjects</h2>
-                <p style="color: {COLORS['text_secondary']}; font-size: 0.9375rem;">
-                    Create and manage your courses
+            <div>
+                <h2 style="margin: 0;">Manage Classes</h2>
+                <p style="color: {COLORS['text_secondary']}; margin: {SPACING['xs']} 0 0 0; font-size: 0.875rem;">
+                    Create and manage your course roster
                 </p>
             </div>
         """, unsafe_allow_html=True)
 
     with col2:
-        if st.button('Create Subject', width='stretch', type='primary', icon=':material/add:'):
+        if st.button('Create Class', width='stretch', type='primary', icon=':material/add:'):
             create_subject_dialog(teacher_id)
 
-    # List all subjects
+    st.markdown(f"<div style='height: {SPACING['lg']};'></div>", unsafe_allow_html=True)
+
+    # List all subjects in grid
     subjects = get_teacher_subjects(teacher_id)
 
     if subjects:
-        for sub in subjects:
+        cols = st.columns(2)
+        for i, sub in enumerate(subjects):
             stats = [
                 ("👥", "Students", sub['total_students']),
-                ("📅", "Classes", sub['total_classes']),
+                ("📅", "Sessions", sub['total_classes']),
             ]
 
             def share_btn(subject=sub):
                 if st.button(f"Share Code", key=f"share_{subject['subject_code']}", icon=":material/share:", width='stretch'):
                     share_subject_dialog(subject['name'], subject['subject_code'])
 
-            subject_card(
-                name=sub['name'],
-                code=sub['subject_code'],
-                section=sub['section'],
-                stats=stats,
-                footer_callback=share_btn
-            )
+            with cols[i % 2]:
+                subject_card(
+                    name=sub['name'],
+                    code=sub['subject_code'],
+                    section=sub['section'],
+                    stats=stats,
+                    footer_callback=share_btn
+                )
     else:
-        st.info("📚 No subjects found. Create one above to get started.")
+        st.info("📚 No classes found. Create one above to get started.")
 
 
 def teacher_tab_attendance_records():
-    """Attendance records tab"""
+    """Attendance records tab with reference table styling"""
 
     st.markdown(f"""
-        <div style="margin-bottom: {SPACING['lg']};">
-            <h2 style="margin-bottom: {SPACING['xs']};">Attendance Records</h2>
-            <p style="color: {COLORS['text_secondary']}; font-size: 0.9375rem;">
-                View all attendance sessions across your subjects
+        <div class="panel" style="margin-bottom: {SPACING['xl']};">
+            <h2 style="margin: 0 0 {SPACING['xs']} 0;">Attendance Records</h2>
+            <p style="color: {COLORS['text_secondary']}; margin: 0; font-size: 0.875rem;">
+                Historical attendance sessions across all your classes
             </p>
         </div>
     """, unsafe_allow_html=True)
@@ -340,30 +432,34 @@ def teacher_tab_attendance_records():
         ts = r.get('timestamp')
         data.append({
             "ts_group": ts.split(".")[0] if ts else None,
-            "Time": datetime.fromisoformat(ts).strftime("%Y-%m-%d %I:%M %p") if ts else "N/A",
-            "Subject": r['subjects']['name'],
-            "Subject Code": r['subjects']['subject_code'],
+            "Date & Time": datetime.fromisoformat(ts).strftime("%b %d, %Y • %I:%M %p") if ts else "N/A",
+            "Class Name": r['subjects']['name'],
+            "Code": r['subjects']['subject_code'],
             "is_present": bool(r.get('is_present', False))
         })
 
     df = pd.DataFrame(data)
 
     summary = (
-        df.groupby(['ts_group', 'Time', 'Subject', 'Subject Code'])
+        df.groupby(['ts_group', 'Date & Time', 'Class Name', 'Code'])
         .agg(
             Present_Count=('is_present', 'sum'),
             Total_Count=('is_present', 'count')
         ).reset_index()
     )
 
-    summary['Attendance'] = (
-        "✅ " + summary['Present_Count'].astype(str) + " / " +
-        summary['Total_Count'].astype(str) + ' students'
+    summary['Attendance Rate'] = (
+        (summary['Present_Count'] / summary['Total_Count'] * 100).round(1).astype(str) + "%"
+    )
+
+    summary['Status'] = (
+        summary['Present_Count'].astype(str) + "/" +
+        summary['Total_Count'].astype(str) + ' present'
     )
 
     display_df = (
         summary.sort_values(by='ts_group', ascending=False)
-        [['Time', 'Subject', 'Subject Code', 'Attendance']]
+        [['Date & Time', 'Class Name', 'Code', 'Attendance Rate', 'Status']]
     )
 
     st.dataframe(display_df, use_container_width=True, hide_index=True)
@@ -387,7 +483,7 @@ def login_teacher(username, password):
 
 
 def teacher_screen_login():
-    """Teacher login screen"""
+    """Teacher login screen with reference panel style"""
 
     c1, c2 = st.columns([3, 1], vertical_alignment='center')
 
@@ -395,20 +491,22 @@ def teacher_screen_login():
         header_dashboard()
 
     with c2:
-        if st.button("← Back to Home", type='secondary', key='loginbackbtn', shortcut="control+backspace"):
+        if st.button("← Back to Home", type='secondary', key='loginbackbtn'):
             st.session_state['login_type'] = None
             st.rerun()
 
-    st.markdown("<br><br>", unsafe_allow_html=True)
+    st.markdown("<br>", unsafe_allow_html=True)
 
-    # Login form in centered container
+    # Login form in centered panel
     col1, col2, col3 = st.columns([1, 2, 1])
 
     with col2:
         st.markdown(f"""
-            <div style="text-align: center; margin-bottom: {SPACING['xl']};">
-                <h2>Teacher Login</h2>
-                <p style="color: {COLORS['text_secondary']};">Sign in with your credentials</p>
+            <div class="panel" style="text-align: center; margin-bottom: {SPACING['lg']};">
+                <h2 style="margin: 0 0 {SPACING['xs']} 0;">Teacher Login</h2>
+                <p style="color: {COLORS['text_secondary']}; margin: 0; font-size: 0.875rem;">
+                    Sign in to access your dashboard
+                </p>
             </div>
         """, unsafe_allow_html=True)
 
@@ -420,7 +518,7 @@ def teacher_screen_login():
         btnc1, btnc2 = st.columns(2)
 
         with btnc1:
-            if st.button('Login', icon=':material/login:', shortcut='control+enter', width='stretch', type='primary'):
+            if st.button('Login', icon=':material/login:', width='stretch', type='primary'):
                 if login_teacher(teacher_username, teacher_pass):
                     st.toast("👋 Welcome back!", icon="✅")
                     import time
@@ -430,7 +528,7 @@ def teacher_screen_login():
                     st.error("Invalid username or password")
 
         with btnc2:
-            if st.button('Register', type="secondary", width='stretch'):
+            if st.button('Create Account', type="secondary", width='stretch'):
                 st.session_state.teacher_login_type = 'register'
                 st.rerun()
 
@@ -458,7 +556,7 @@ def register_teacher(teacher_username, teacher_name, teacher_pass, teacher_pass_
 
 
 def teacher_screen_register():
-    """Teacher registration screen"""
+    """Teacher registration screen with reference panel style"""
 
     c1, c2 = st.columns([3, 1], vertical_alignment='center')
 
@@ -466,20 +564,22 @@ def teacher_screen_register():
         header_dashboard()
 
     with c2:
-        if st.button("← Back to Home", type='secondary', key='registerbackbtn', shortcut="control+backspace"):
+        if st.button("← Back to Home", type='secondary', key='registerbackbtn'):
             st.session_state['login_type'] = None
             st.rerun()
 
-    st.markdown("<br><br>", unsafe_allow_html=True)
+    st.markdown("<br>", unsafe_allow_html=True)
 
-    # Registration form in centered container
+    # Registration form in centered panel
     col1, col2, col3 = st.columns([1, 2, 1])
 
     with col2:
         st.markdown(f"""
-            <div style="text-align: center; margin-bottom: {SPACING['xl']};">
-                <h2>Create Teacher Account</h2>
-                <p style="color: {COLORS['text_secondary']};">Register to start managing attendance</p>
+            <div class="panel" style="text-align: center; margin-bottom: {SPACING['lg']};">
+                <h2 style="margin: 0 0 {SPACING['xs']} 0;">Create Teacher Account</h2>
+                <p style="color: {COLORS['text_secondary']}; margin: 0; font-size: 0.875rem;">
+                    Register to start taking AI attendance
+                </p>
             </div>
         """, unsafe_allow_html=True)
 
@@ -493,7 +593,7 @@ def teacher_screen_register():
         btnc1, btnc2 = st.columns(2)
 
         with btnc1:
-            if st.button('Register', icon=':material/person_add:', shortcut='control+enter', width='stretch', type='primary'):
+            if st.button('Register', icon=':material/person_add:', width='stretch', type='primary'):
                 success, message = register_teacher(teacher_username, teacher_name, teacher_pass, teacher_pass_confirm)
                 if success:
                     st.success(message)
