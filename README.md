@@ -91,7 +91,7 @@ Recognized Students
 
 SnapClass can also identify students from classroom audio.
 
-```text
+
 Classroom Audio
       ↓
 Speech Segmentation
