@@ -1,5 +1,3 @@
-
-```markdown
 # SnapClass — AI Attendance System
 
 > **AI-powered classroom attendance using face and voice recognition.**
@@ -18,6 +16,27 @@ Built with **Python, Streamlit, Supabase, dlib, and Resemblyzer**.
 
 ## 📸 Screenshots
 
+### Home
+
+![SnapClass Home](docs/screenshots/home.png)
+
+### Teacher Dashboard
+
+![Teacher Dashboard](docs/screenshots/teacher-dashboard.png)
+
+### AI Face Attendance
+
+![Face Attendance](docs/screenshots/face-attendance.png)
+
+### Attendance Review
+
+![Attendance Review](docs/screenshots/attendance-review.png)
+
+### Student Dashboard
+
+![Student Dashboard](docs/screenshots/student-dashboard.png)
+
+> Screenshots showcase the main application workflow and UI.
 
 ---
 
@@ -67,9 +86,6 @@ Nearest-Neighbor Matching
 Distance Threshold
       ↓
 Recognized Students
-```
-
-The face recognition pipeline uses **dlib** and a 128-dimensional face embedding representation.
 
 ### Voice Recognition
 
