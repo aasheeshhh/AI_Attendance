@@ -1,18 +1,14 @@
-# Utilities
+streamlit>=1.50
+supabase
+bcrypt
 numpy
 pandas
+pillow
+segno
 
-# Face Recognition
-scikit-learn
+# Face + voice recognition
 dlib-bin
 git+https://github.com/ageitgey/face_recognition_models
 setuptools<70.0.0
-
-supabase # database
-bcrypt # hashing methods
-segno # QR generator
-pillow # Image Preprocessing
-streamlit # Frontend
-
 librosa
 resemblyzer
