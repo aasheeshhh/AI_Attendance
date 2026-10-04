@@ -5,7 +5,7 @@ Main Application Entry Point - macOS Style
 import streamlit as st
 
 from src.screens.home_screen import home_screen
-from src.screens.teacher_screen import teacher_screen
+from src.screens.reference_teacher_screen import reference_teacher_screen
 from src.screens.student_screen import student_screen
 from src.components.dialog_auto_enroll import auto_enroll_dialog
 from src.ui.macos_design_system import apply_macos_base_styles
@@ -17,7 +17,7 @@ def main():
     st.set_page_config(
         page_title='SnapClass — AI Attendance',
         page_icon="https://i.ibb.co/YTYGn5qV/logo.png",
-        layout="centered",
+        layout="wide",
         initial_sidebar_state="collapsed"
     )
 
@@ -30,7 +30,7 @@ def main():
     # Route based on login type
     match st.session_state['login_type']:
         case 'teacher':
-            teacher_screen()
+            reference_teacher_screen()
 
         case 'student':
             student_screen()
